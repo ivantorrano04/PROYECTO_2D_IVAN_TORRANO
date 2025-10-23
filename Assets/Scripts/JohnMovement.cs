@@ -124,4 +124,15 @@ public class JohnMovement : MonoBehaviour
     {
         return puntuacion;
     }
+    public void Curar(int cantidad)
+{
+    vidaActual += cantidad;
+    // Asegúrate de no superar la vida máxima
+    if (vidaActual > vidaMaxima)
+    {
+        vidaActual = vidaMaxima;
+    }
+    // También actualizamos Health (tu sistema original)
+    Health = Mathf.CeilToInt(vidaActual);
+}
 }
