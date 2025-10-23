@@ -3,8 +3,8 @@ using UnityEngine.UI;
 
 public class BarraVida : MonoBehaviour
 {
-    public Image rellenoVida;
-    public JohnMovement johnMovement; // Arrastra a John aquí en el Inspector
+    public Image rellenoVida; // Arrastra aquí el objeto "fill"
+    public JohnMovement johnMovement;
 
     private float vidaMaxima;
 
@@ -22,7 +22,12 @@ public class BarraVida : MonoBehaviour
     {
         if (rellenoVida != null && johnMovement != null)
         {
-            rellenoVida.fillAmount = johnMovement.VidaActual / vidaMaxima;
+            // Calculamos el porcentaje de vida
+            float fillPercent = johnMovement.VidaActual / vidaMaxima;
+
+            // Escalamos el relleno horizontalmente
+            // El ancho será proporcional al porcentaje de vida
+            rellenoVida.rectTransform.localScale = new Vector3(fillPercent, 1f, 1f);
         }
     }
 }

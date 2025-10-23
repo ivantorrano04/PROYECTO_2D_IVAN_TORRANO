@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BulletScript : MonoBehaviour
 {
+    public AudioClip sound;
     public float Speed;
     public AudioClip Sound;
 
@@ -14,6 +15,7 @@ public class BulletScript : MonoBehaviour
     {
         Rigidbody2D = GetComponent<Rigidbody2D>();
         Camera.main.GetComponent<AudioSource>().PlayOneShot(Sound);
+
     }
 
     private void FixedUpdate()

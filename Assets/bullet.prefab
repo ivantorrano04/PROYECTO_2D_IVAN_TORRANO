@@ -128,8 +128,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fc1e47a70de361439505574c8fd4978, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BulletScript
+  sound: {fileID: 8300000, guid: 6c884f61a1433924e9bcae57aa6bd846, type: 3}
   Speed: 5
-  Sound: {fileID: 0}
+  Sound: {fileID: 8300000, guid: 6c884f61a1433924e9bcae57aa6bd846, type: 3}
 --- !u!50 &6948062358814020246
 Rigidbody2D:
   serializedVersion: 5

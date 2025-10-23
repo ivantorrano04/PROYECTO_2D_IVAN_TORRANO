@@ -23,6 +23,8 @@ public class JohnMovement : MonoBehaviour
     private bool Grounded;
     private float LastShoot;
     private int Health = 5; // Tu sistema original sigue intacto
+                            // Sistema de puntuación
+    private int puntuacion = 0;
 
     void Start()
     {
@@ -30,6 +32,7 @@ public class JohnMovement : MonoBehaviour
         Animator = GetComponent<Animator>();
         vidaActual = vidaMaxima; // Inicializamos la vida compatible con la UI
         balasActuales = maxBalas;
+        puntuacion = 0; // 👈 Reiniciar al empezar
     }
 
     void Update()
@@ -109,5 +112,16 @@ public class JohnMovement : MonoBehaviour
     public void Recargar()
     {
         balasActuales = maxBalas;
+    }
+    // Para que otros scripts (como el enemigo) sumen puntos
+    public void SumarPuntos(int puntos)
+    {
+        puntuacion += puntos;
+    }
+
+    // Para que el contador de UI lea la puntuación
+    public int ObtenerPuntuacion()
+    {
+        return puntuacion;
     }
 }
