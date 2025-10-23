@@ -1,0 +1,11 @@
+Library/
+Temp/
+[Oo]bj/
+[Bb]uild*/
+[Bb]uilds*/
+Logs/
+UserSettings/
+MemoryCaptures/
+Assembly-CSharp.csproj
+a ver si ahora si.sln
+*.user
