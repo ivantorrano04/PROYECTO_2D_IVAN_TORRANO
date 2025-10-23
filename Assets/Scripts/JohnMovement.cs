@@ -1,29 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement; // 👈 Necesario para reiniciar la escena
+using UnityEngine.SceneManagement;
 
 public class JohnMovement : MonoBehaviour
 {
+    public int maxBalas = 10;      // Balas máximas
+    private int balasActuales;     // Balas actuales (empieza lleno)
     public float Speed = 5f;
     public float JumpForce = 8f;
     public GameObject BulletPrefab;
     public Transform GroundCheck;
-
-    // 👇 Añade este umbral de caída (ajústalo según tu mapa)
     public float FallThreshold = -10f;
+
+    // 👇 SOLO AÑADO ESTO para la barra de vida (NO toco nada del movimiento)
+    public float vidaMaxima = 5f; // Valor editable en el Inspector
+    private float vidaActual;
 
     private Rigidbody2D Rigidbody2D;
     private Animator Animator;
     private float Horizontal;
     private bool Grounded;
     private float LastShoot;
-    private int Health = 5;
+    private int Health = 5; // Tu sistema original sigue intacto
 
     void Start()
     {
         Rigidbody2D = GetComponent<Rigidbody2D>();
         Animator = GetComponent<Animator>();
+        vidaActual = vidaMaxima; // Inicializamos la vida compatible con la UI
+        balasActuales = maxBalas;
     }
 
     void Update()
@@ -32,7 +38,7 @@ public class JohnMovement : MonoBehaviour
         if (transform.position.y < FallThreshold)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-            return; // Evita ejecutar el resto si ya se reinició
+            return;
         }
 
         Horizontal = Input.GetAxisRaw("Horizontal");
@@ -52,9 +58,19 @@ public class JohnMovement : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Space) && Time.time > LastShoot + 0.25f)
         {
-            Shoot();
-            LastShoot = Time.time;
+            if (balasActuales > 0)
+            {
+                Shoot();
+                balasActuales--;
+                LastShoot = Time.time;
+            }
         }
+        // Recargar con la tecla R
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            Recargar();
+        }
+
     }
 
     void FixedUpdate()
@@ -77,10 +93,21 @@ public class JohnMovement : MonoBehaviour
     public void Hit()
     {
         Health--;
+        vidaActual = Health; // 👈 Sincronizamos con el sistema de vida de la UI
+
         if (Health <= 0)
         {
-            // Opcional: también reiniciar al morir
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
+    }
+
+    // 👇 Propiedad para que BarraVida lea la vida actual (sin romper tu lógica)
+    public float VidaActual => vidaActual;
+    // Propiedad para que otros scripts lean las balas
+    public int BalasActuales => balasActuales;
+
+    public void Recargar()
+    {
+        balasActuales = maxBalas;
     }
 }
