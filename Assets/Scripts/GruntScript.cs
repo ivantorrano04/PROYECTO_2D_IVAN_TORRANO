@@ -1,34 +1,38 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GruntScript : MonoBehaviour
 {
     public Transform John;
     public GameObject BulletPrefab;
-    public float Speed = 2f; // Velocidad de caminar
+    public float Speed = 2f;
+    public float stopDistance = 1.2f; // 👈 Distancia mínima a la que se detiene
 
-    private int Health = 3;
+    private int Health = 2;
     private float LastShoot;
     private Rigidbody2D rb;
-    private bool isGrounded = true; // Puedes mejorar esto con un GroundCheck si lo necesitas
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        if (rb == null)
+        {
+            Debug.LogError("¡El enemigo necesita un Rigidbody2D!");
+        }
     }
 
     void Update()
     {
         if (John == null) return;
-        
 
-        Vector3 direction = John.position - transform.position;
-        if (direction.x >= 0.0f) transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-        else transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
+        // Mirar hacia John
+        if (John.position.x >= transform.position.x)
+            transform.localScale = Vector3.one; // (1,1,1)
+        else
+            transform.localScale = new Vector3(-1, 1, 1);
 
         float distance = Mathf.Abs(John.position.x - transform.position.x);
 
+        // Disparar solo si está MUY cerca
         if (distance < 1.0f && Time.time > LastShoot + 0.25f)
         {
             Shoot();
@@ -36,14 +40,24 @@ public class GruntScript : MonoBehaviour
         }
     }
 
-     void FixedUpdate()
+    void FixedUpdate()
     {
+        if (John == null) return;
 
-        // Mover hacia John (solo en X)
+        float distance = Mathf.Abs(John.position.x - transform.position.x);
         float directionX = Mathf.Sign(John.position.x - transform.position.x);
-        rb.velocity = new Vector2(directionX * Speed, rb.velocity.y);
-    }
 
+        // Solo moverse si está más lejos que la distancia de parada
+        if (distance > stopDistance)
+        {
+            rb.velocity = new Vector2(directionX * Speed, rb.velocity.y);
+        }
+        else
+        {
+            // Detenerse completamente en X
+            rb.velocity = new Vector2(0f, rb.velocity.y);
+        }
+    }
 
     private void Shoot()
     {
@@ -55,6 +69,9 @@ public class GruntScript : MonoBehaviour
     public void Hit()
     {
         Health -= 1;
-        if (Health == 0) Destroy(gameObject);
+        if (Health <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
 }
